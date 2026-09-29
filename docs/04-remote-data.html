@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Remote data | Anchor Examples</title>
+<style>
+:root{--bg:#fff;--alt:#f6f7f9;--text:#1e1e2d;--dim:#6b7280;--line:#e5e7eb;--accent:#4f46e5}
+@media (prefers-color-scheme:dark){:root{--bg:#0f1115;--alt:#171a21;--text:#e6e8ec;--dim:#9099a6;--line:#262b36;--accent:#8b8ff5}}
+*{box-sizing:border-box}
+repeat{display:contents}wraps{display:none}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 -apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:640px;margin:0 auto;padding:32px 20px 80px}
+h1{font-size:26px;margin:8px 0 4px}h3{margin:0 0 4px;font-size:16px}
+a{color:var(--accent)}
+.crumb{font-size:13px;margin:0}.desc{color:var(--dim);margin-top:0}
+.uses{font-size:13px;color:var(--dim);border-top:1px solid var(--line);margin-top:32px;padding-top:12px}
+form,.row{display:flex;gap:8px;margin:16px 0;flex-wrap:wrap}
+input[type=text],input[type=number],input:not([type]){padding:8px 10px;border:1px solid var(--line);border-radius:6px;background:var(--alt);color:var(--text);font:inherit}
+input[type=submit],button{padding:8px 14px;border:1px solid var(--accent);border-radius:6px;background:var(--accent);color:#fff;font:inherit;cursor:pointer}
+label{display:block;margin:10px 0}label input:not([type=checkbox]){display:block;margin-top:4px}
+ol,ul{padding-left:22px}li{margin:6px 0}small,.empty{color:var(--dim)}
+dl{display:grid;grid-template-columns:120px 1fr;gap:4px 12px;background:var(--alt);border:1px solid var(--line);border-radius:8px;padding:12px 16px}
+dt{color:var(--dim)}dd{margin:0}
+.out,.status{padding:10px 14px;background:var(--alt);border:1px solid var(--line);border-radius:8px}
+.card{padding:12px 16px;margin:10px 0;border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:8px;background:var(--alt)}
+.card p{margin:0}.card.warn{border-left-color:#d97706}.card.ok{border-left-color:#16a34a}
+
+h2{font-size:18px;margin:36px 0 8px}
+.src{position:relative}
+pre{margin:0;padding:14px 16px;overflow-x:auto;background:var(--alt);border:1px solid var(--line);border-radius:8px;font:13px/1.55 "SF Mono",Menlo,Consolas,monospace}
+pre code{font:inherit}
+.copy{position:absolute;top:8px;right:8px;padding:3px 10px;font-size:12px;background:var(--bg);color:var(--text);border:1px solid var(--line)}
+.tag{color:#c2410c}.attr{color:#0369a1}.str{color:#15803d}.cmt{color:var(--dim);font-style:italic}.kw{color:#7c3aed}
+@media (prefers-color-scheme:dark){.tag{color:#fb923c}.attr{color:#7dd3fc}.str{color:#86efac}.kw{color:#c4b5fd}}
+</style>
+<script src="https://cdn.jsdelivr.net/gh/iamkave/Anchor@1.0.0/interpreter.js"></script>
+</head>
+<body>
+<main>
+<p class="crumb"><a href="index.html">All examples</a></p>
+<h1>Remote data</h1>
+<p class="desc">Users are loaded from a public API. The list can be sorted, resized, and shows loading and error states.</p>
+<fetch @LoadUsers
+       url="https://jsonplaceholder.typicode.com/users"
+       pushto="$users"></fetch>
+
+<if test="$usersLoading"><p class="status">Loading</p></if>
+<if test="$usersError" has><p class="status">Unable to load users.</p></if>
+
+<div class="row">
+  <button @Fewer type="button">Show fewer</button>
+  <button @More type="button">Show more</button>
+</div>
+
+<ul>
+  <repeat as="u" in="$users" sort="name" limit="$pageSize">
+    <li><b>[u.name]</b><br><small>[u.email], [u.company.name]</small></li>
+    <else><li class="empty">No users to show.</li></else>
+  </repeat>
+</ul>
+
+<call fn="fewer" await="Fewer:click"></call>
+<call fn="more" await="More:click"></call>
+
+<script>
+  Anchor.expose({ users: [], pageSize: 3 });
+
+  Anchor.exposeFunctions({
+    fewer: () => Anchor.set("pageSize", n => n - 1),
+    more:  () => Anchor.set("pageSize", n => n + 1)
+  });
+</script>
+<h2>Source</h2>
+<div class="src"><button class="copy" type="button">Copy</button><pre><code><span class="tag">&lt;script</span> <span class="attr">src</span>=<span class="str">"https://cdn.jsdelivr.net/gh/iamkave/Anchor@1.0.0/interpreter.js"</span><span class="tag">&gt;</span><span class="tag">&lt;/script</span><span class="tag">&gt;</span>
+
+<span class="tag">&lt;fetch</span> <span class="attr">@LoadUsers</span>
+       <span class="attr">url</span>=<span class="str">"https://jsonplaceholder.typicode.com/users"</span>
+       <span class="attr">pushto</span>=<span class="str">"$users"</span><span class="tag">&gt;</span><span class="tag">&lt;/fetch</span><span class="tag">&gt;</span>
+
+<span class="tag">&lt;if</span> <span class="attr">test</span>=<span class="str">"$usersLoading"</span><span class="tag">&gt;</span><span class="tag">&lt;p</span> <span class="attr">class</span>=<span class="str">"status"</span><span class="tag">&gt;</span>Loading<span class="tag">&lt;/p</span><span class="tag">&gt;</span><span class="tag">&lt;/if</span><span class="tag">&gt;</span>
+<span class="tag">&lt;if</span> <span class="attr">test</span>=<span class="str">"$usersError"</span> <span class="attr">has</span><span class="tag">&gt;</span><span class="tag">&lt;p</span> <span class="attr">class</span>=<span class="str">"status"</span><span class="tag">&gt;</span>Unable to load users.<span class="tag">&lt;/p</span><span class="tag">&gt;</span><span class="tag">&lt;/if</span><span class="tag">&gt;</span>
+
+<span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="str">"row"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;button</span> <span class="attr">@Fewer</span> <span class="attr">type</span>=<span class="str">"button"</span><span class="tag">&gt;</span>Show fewer<span class="tag">&lt;/button</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;button</span> <span class="attr">@More</span> <span class="attr">type</span>=<span class="str">"button"</span><span class="tag">&gt;</span>Show more<span class="tag">&lt;/button</span><span class="tag">&gt;</span>
+<span class="tag">&lt;/div</span><span class="tag">&gt;</span>
+
+<span class="tag">&lt;ul</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;repeat</span> <span class="attr">as</span>=<span class="str">"u"</span> <span class="attr">in</span>=<span class="str">"$users"</span> <span class="attr">sort</span>=<span class="str">"name"</span> <span class="attr">limit</span>=<span class="str">"$pageSize"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;li</span><span class="tag">&gt;</span><span class="tag">&lt;b</span><span class="tag">&gt;</span>[u.name]<span class="tag">&lt;/b</span><span class="tag">&gt;</span><span class="tag">&lt;br</span><span class="tag">&gt;</span><span class="tag">&lt;small</span><span class="tag">&gt;</span>[u.email], [u.company.name]<span class="tag">&lt;/small</span><span class="tag">&gt;</span><span class="tag">&lt;/li</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;else</span><span class="tag">&gt;</span><span class="tag">&lt;li</span> <span class="attr">class</span>=<span class="str">"empty"</span><span class="tag">&gt;</span>No users to show.<span class="tag">&lt;/li</span><span class="tag">&gt;</span><span class="tag">&lt;/else</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;/repeat</span><span class="tag">&gt;</span>
+<span class="tag">&lt;/ul</span><span class="tag">&gt;</span>
+
+<span class="tag">&lt;call</span> <span class="attr">fn</span>=<span class="str">"fewer"</span> <span class="attr">await</span>=<span class="str">"Fewer:click"</span><span class="tag">&gt;</span><span class="tag">&lt;/call</span><span class="tag">&gt;</span>
+<span class="tag">&lt;call</span> <span class="attr">fn</span>=<span class="str">"more"</span> <span class="attr">await</span>=<span class="str">"More:click"</span><span class="tag">&gt;</span><span class="tag">&lt;/call</span><span class="tag">&gt;</span>
+
+<span class="tag">&lt;script</span><span class="tag">&gt;</span>
+  Anchor.expose({ users: [], pageSize: 3 });
+
+  Anchor.exposeFunctions({
+    fewer: () <span class="kw">=&gt;</span> Anchor.set(<span class="str">"pageSize"</span>, n <span class="kw">=&gt;</span> n - 1),
+    more:  () <span class="kw">=&gt;</span> Anchor.set(<span class="str">"pageSize"</span>, n <span class="kw">=&gt;</span> n + 1)
+  });
+<span class="tag">&lt;/script</span><span class="tag">&gt;</span></code></pre></div>
+<p class="uses">Demonstrates: <code>&lt;fetch&gt;</code> with automatic <code>Loading</code> and <code>Error</code> values, <code>sort</code>, <code>limit</code>, <code>Anchor.set</code> with an updater function.</p>
+</main>
+<script>
+document.querySelector(".copy").addEventListener("click", function () {
+  var btn = this;
+  navigator.clipboard.writeText(document.querySelector(".src code").textContent).then(function () {
+    btn.textContent = "Copied";
+    setTimeout(function () { btn.textContent = "Copy"; }, 1500);
+  });
+});
+</script>
+</body>
+</html>

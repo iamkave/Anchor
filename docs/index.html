@@ -144,6 +144,8 @@
   .hidden-by-search { display: none !important; }
   .no-results { display: none; color: var(--text-dim); padding: 40px 0; text-align: center; }
 
+  .example-frame { width: 100%; height: 560px; border: 1px solid var(--border); border-radius: 10px; background: #fff; }
+  .example-open { font-size: 13px; margin: 6px 0 0; }
   footer { padding: 30px 40px 60px; color: var(--text-dim); font-size: 13px; }
   @media (max-width: 860px) {
     nav.sidebar { display: none; }
@@ -191,6 +193,15 @@
       <div class="group-title">Reference</div>
       <a href="#security">Security</a>
       <a href="#cheatsheet">Quick reference</a>
+    </div>
+    <div class="group">
+      <div class="group-title">Examples</div>
+      <a href="#examples">Running the examples</a>
+      <a href="#example-greeting">Greeting form</a>
+      <a href="#example-tasks">Task list</a>
+      <a href="#example-profile">Live profile</a>
+      <a href="#example-remote">Remote data</a>
+      <a href="#example-components">Components</a>
     </div>
   </nav>
 
@@ -263,7 +274,7 @@ Anchor.set(<span class="str">"pageSize"</span>, n =&gt; n - 1);</code></pre>
       <p>Directives refer to named elements by identifier, for example <code>await="SearchBox:input"</code> or <code>params="@SearchBox"</code>.</p>
 
       <h3>Case sensitivity</h3>
-      <p>Identifiers are case-sensitive: <code>@GroceryName</code> and <code>@groceryname</code> refer to different elements. This requires the page to be served over <code>http://</code> or <code>https://</code>. When served from <code>file://</code>, identifiers are treated as lowercase.</p>
+      <p>Identifiers keep the case in which they are written, so <code>@GroceryName</code> is available as <code>Anchor.elements.GroceryName</code>. Two identifiers that differ only in case, such as <code>@GroceryName</code> and <code>@groceryname</code>, are not allowed and log an error. Preserving case requires the page to be served over <code>http://</code> or <code>https://</code>. When served from <code>file://</code>, identifiers are treated as lowercase.</p>
     </section>
 
     <section id="d-repeat" class="searchable">
@@ -399,7 +410,7 @@ Anchor.exposeFunctions({ save });</code></pre>
           <span class="attr">await</span>=<span class="str">"CityForm:submit"</span> <span class="attr">return</span> <span class="attr">pend</span><span class="tag">&gt;&lt;/call&gt;</span>
 <span class="tag">&lt;/format&gt;</span></code></pre>
       <div class="box warn">
-        <p>When <code>return</code> and <code>pend</code> are combined, the first call dispatches <code>invoke</code> twice: once when the result placeholder is created and again when the resolved value is available. Later calls dispatch it once. Handlers attached to <code>invoke</code> should tolerate the additional first event.</p>
+        <p>When <code>return</code> is used, the first call dispatches <code>invoke</code> twice: once when the result placeholder is created and again when the value is available. Later calls dispatch it once. Handlers attached to <code>invoke</code> should tolerate the additional first event.</p>
       </div>
     </section>
 
@@ -608,6 +619,49 @@ Anchor.mount(
       </table>
     </section>
 
+    <section id="examples" class="example">
+      <h2>Examples</h2>
+      <p>Each example is a complete page that runs Anchor. Select an example in the sidebar to run it here. Every example page includes a Source section with its full code, and can also be opened on its own.</p>
+      <div class="box note">
+        <p>The examples are loaded from the <code>anchor-examples</code> folder located next to this page. Serve both over <code>http://</code> or <code>https://</code>.</p>
+      </div>
+    </section>
+
+    <section id="example-greeting" class="example">
+      <h2>Greeting form</h2>
+      <p>Identifiers and event-driven output with <code>&lt;format&gt;</code>.</p>
+      <iframe class="example-frame" src="anchor-examples/01-greeting.html" title="Greeting form example" loading="lazy"></iframe>
+      <p class="example-open"><a href="anchor-examples/01-greeting.html" target="_blank" rel="noopener">Open in a new tab</a></p>
+    </section>
+
+    <section id="example-tasks" class="example">
+      <h2>Task list</h2>
+      <p>Reactive data, <code>&lt;repeat&gt;</code>, and <code>&lt;call&gt;</code>.</p>
+      <iframe class="example-frame" src="anchor-examples/02-task-list.html" title="Task list example" loading="lazy"></iframe>
+      <p class="example-open"><a href="anchor-examples/02-task-list.html" target="_blank" rel="noopener">Open in a new tab</a></p>
+    </section>
+
+    <section id="example-profile" class="example">
+      <h2>Live profile</h2>
+      <p>Two-way binding with <code>bind</code> and conditions with <code>&lt;if&gt;</code>.</p>
+      <iframe class="example-frame" src="anchor-examples/03-live-profile.html" title="Live profile example" loading="lazy"></iframe>
+      <p class="example-open"><a href="anchor-examples/03-live-profile.html" target="_blank" rel="noopener">Open in a new tab</a></p>
+    </section>
+
+    <section id="example-remote" class="example">
+      <h2>Remote data</h2>
+      <p><code>&lt;fetch&gt;</code>, sorting, and paging with loading and error states.</p>
+      <iframe class="example-frame" src="anchor-examples/04-remote-data.html" title="Remote data example" loading="lazy"></iframe>
+      <p class="example-open"><a href="anchor-examples/04-remote-data.html" target="_blank" rel="noopener">Open in a new tab</a></p>
+    </section>
+
+    <section id="example-components" class="example">
+      <h2>Components</h2>
+      <p><code>&lt;wraps&gt;</code> templates and the JavaScript API.</p>
+      <iframe class="example-frame" src="anchor-examples/05-components.html" title="Components example" loading="lazy"></iframe>
+      <p class="example-open"><a href="anchor-examples/05-components.html" target="_blank" rel="noopener">Open in a new tab</a></p>
+    </section>
+
     <div class="no-results" id="no-results">No results found.</div>
 
   </main>
@@ -636,11 +690,13 @@ Anchor.mount(
 
   // ---------- sidebar active-link tracking ----------
   var sections = Array.prototype.slice.call(document.querySelectorAll("section.searchable"));
+  var navSections = Array.prototype.slice.call(document.querySelectorAll("main section"));
+  var exampleSections = Array.prototype.slice.call(document.querySelectorAll("section.example"));
   var navLinks = Array.prototype.slice.call(document.querySelectorAll("nav.sidebar a"));
   function updateActive() {
     var pos = window.scrollY + 90;
-    var current = sections[0];
-    sections.forEach(function (s) { if (s.offsetTop <= pos) current = s; });
+    var current = navSections[0];
+    navSections.forEach(function (s) { if (s.offsetTop <= pos) current = s; });
     navLinks.forEach(function (a) {
       a.classList.toggle("active", current && a.getAttribute("href") === "#" + current.id);
     });
@@ -702,6 +758,7 @@ Anchor.mount(
   function runSearch(query) {
     query = query.trim();
     clearHighlights();
+    exampleSections.forEach(function (e) { e.classList.toggle("hidden-by-search", !!query); });
     if (!query) {
       searchCount.textContent = "";
       noResults.style.display = "none";

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Components | Anchor Examples</title>
+<style>
+:root{--bg:#fff;--alt:#f6f7f9;--text:#1e1e2d;--dim:#6b7280;--line:#e5e7eb;--accent:#4f46e5}
+@media (prefers-color-scheme:dark){:root{--bg:#0f1115;--alt:#171a21;--text:#e6e8ec;--dim:#9099a6;--line:#262b36;--accent:#8b8ff5}}
+*{box-sizing:border-box}
+repeat{display:contents}wraps{display:none}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 -apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:640px;margin:0 auto;padding:32px 20px 80px}
+h1{font-size:26px;margin:8px 0 4px}h3{margin:0 0 4px;font-size:16px}
+a{color:var(--accent)}
+.crumb{font-size:13px;margin:0}.desc{color:var(--dim);margin-top:0}
+.uses{font-size:13px;color:var(--dim);border-top:1px solid var(--line);margin-top:32px;padding-top:12px}
+form,.row{display:flex;gap:8px;margin:16px 0;flex-wrap:wrap}
+input[type=text],input[type=number],input:not([type]){padding:8px 10px;border:1px solid var(--line);border-radius:6px;background:var(--alt);color:var(--text);font:inherit}
+input[type=submit],button{padding:8px 14px;border:1px solid var(--accent);border-radius:6px;background:var(--accent);color:#fff;font:inherit;cursor:pointer}
+label{display:block;margin:10px 0}label input:not([type=checkbox]){display:block;margin-top:4px}
+ol,ul{padding-left:22px}li{margin:6px 0}small,.empty{color:var(--dim)}
+dl{display:grid;grid-template-columns:120px 1fr;gap:4px 12px;background:var(--alt);border:1px solid var(--line);border-radius:8px;padding:12px 16px}
+dt{color:var(--dim)}dd{margin:0}
+.out,.status{padding:10px 14px;background:var(--alt);border:1px solid var(--line);border-radius:8px}
+.card{padding:12px 16px;margin:10px 0;border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:8px;background:var(--alt)}
+.card p{margin:0}.card.warn{border-left-color:#d97706}.card.ok{border-left-color:#16a34a}
+
+h2{font-size:18px;margin:36px 0 8px}
+.src{position:relative}
+pre{margin:0;padding:14px 16px;overflow-x:auto;background:var(--alt);border:1px solid var(--line);border-radius:8px;font:13px/1.55 "SF Mono",Menlo,Consolas,monospace}
+pre code{font:inherit}
+.copy{position:absolute;top:8px;right:8px;padding:3px 10px;font-size:12px;background:var(--bg);color:var(--text);border:1px solid var(--line)}
+.tag{color:#c2410c}.attr{color:#0369a1}.str{color:#15803d}.cmt{color:var(--dim);font-style:italic}.kw{color:#7c3aed}
+@media (prefers-color-scheme:dark){.tag{color:#fb923c}.attr{color:#7dd3fc}.str{color:#86efac}.kw{color:#c4b5fd}}
+</style>
+<script src="https://cdn.jsdelivr.net/gh/iamkave/Anchor@1.0.0/interpreter.js"></script>
+</head>
+<body>
+<main>
+<p class="crumb"><a href="index.html">All examples</a></p>
+<h1>Components</h1>
+<p class="desc">A component is defined once and used as a tag, in markup or from JavaScript.</p>
+<wraps>
+  <wrap tag="note-card">
+    <div class="card {get.tone}">
+      <h3>{get.heading}</h3>
+      <p>{get.content}</p>
+    </div>
+  </wrap>
+</wraps>
+
+<note-card tone="info" heading="Defined once">The template is declared in a single place.</note-card>
+<note-card tone="warn" heading="Configured by attributes">Each attribute on the tag is available inside the template.</note-card>
+
+<div class="row"><button @AddCard type="button">Add card from JavaScript</button></div>
+<div @Board></div>
+
+<script>
+  Anchor.ready.then(() => {
+    let count = 0;
+    Anchor.elements.AddCard.addEventListener("click", () => {
+      count++;
+      const card = Anchor.createWrap("note-card", null, "Created with Anchor.createWrap.", {
+        tone: "ok",
+        heading: "Card " + count
+      });
+      Anchor.mount(card, "@Board", "append");
+    });
+  });
+</script>
+<h2>Source</h2>
+<div class="src"><button class="copy" type="button">Copy</button><pre><code><span class="tag">&lt;script</span> <span class="attr">src</span>=<span class="str">"https://cdn.jsdelivr.net/gh/iamkave/Anchor@1.0.0/interpreter.js"</span><span class="tag">&gt;</span><span class="tag">&lt;/script</span><span class="tag">&gt;</span>
+
+<span class="tag">&lt;wraps</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;wrap</span> <span class="attr">tag</span>=<span class="str">"note-card"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="str">"card {get.tone}"</span><span class="tag">&gt;</span>
+      <span class="tag">&lt;h3</span><span class="tag">&gt;</span>{get.heading}<span class="tag">&lt;/h3</span><span class="tag">&gt;</span>
+      <span class="tag">&lt;p</span><span class="tag">&gt;</span>{get.content}<span class="tag">&lt;/p</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;/div</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;/wrap</span><span class="tag">&gt;</span>
+<span class="tag">&lt;/wraps</span><span class="tag">&gt;</span>
+
+<span class="tag">&lt;note-card</span> <span class="attr">tone</span>=<span class="str">"info"</span> <span class="attr">heading</span>=<span class="str">"Defined once"</span><span class="tag">&gt;</span>The template is declared in a single place.<span class="tag">&lt;/note-card</span><span class="tag">&gt;</span>
+<span class="tag">&lt;note-card</span> <span class="attr">tone</span>=<span class="str">"warn"</span> <span class="attr">heading</span>=<span class="str">"Configured by attributes"</span><span class="tag">&gt;</span>Each attribute on the tag is available inside the template.<span class="tag">&lt;/note-card</span><span class="tag">&gt;</span>
+
+<span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="str">"row"</span><span class="tag">&gt;</span><span class="tag">&lt;button</span> <span class="attr">@AddCard</span> <span class="attr">type</span>=<span class="str">"button"</span><span class="tag">&gt;</span>Add card from JavaScript<span class="tag">&lt;/button</span><span class="tag">&gt;</span><span class="tag">&lt;/div</span><span class="tag">&gt;</span>
+<span class="tag">&lt;div</span> <span class="attr">@Board</span><span class="tag">&gt;</span><span class="tag">&lt;/div</span><span class="tag">&gt;</span>
+
+<span class="tag">&lt;script</span><span class="tag">&gt;</span>
+  Anchor.ready.then(() <span class="kw">=&gt;</span> {
+    <span class="kw">let</span> count = 0;
+    Anchor.elements.AddCard.addEventListener(<span class="str">"click"</span>, () <span class="kw">=&gt;</span> {
+      count++;
+      <span class="kw">const</span> card = Anchor.createWrap(<span class="str">"note-card"</span>, null, <span class="str">"Created with Anchor.createWrap."</span>, {
+        tone: <span class="str">"ok"</span>,
+        heading: <span class="str">"Card "</span> + count
+      });
+      Anchor.mount(card, <span class="str">"@Board"</span>, <span class="str">"append"</span>);
+    });
+  });
+<span class="tag">&lt;/script</span><span class="tag">&gt;</span></code></pre></div>
+<p class="uses">Demonstrates: <code>&lt;wraps&gt;</code> templates, <code>{get.attr}</code> and <code>{get.content}</code>, <code>Anchor.ready</code>, <code>Anchor.createWrap</code>, <code>Anchor.mount</code>.</p>
+</main>
+<script>
+document.querySelector(".copy").addEventListener("click", function () {
+  var btn = this;
+  navigator.clipboard.writeText(document.querySelector(".src code").textContent).then(function () {
+    btn.textContent = "Copied";
+    setTimeout(function () { btn.textContent = "Copy"; }, 1500);
+  });
+});
+</script>
+</body>
+</html>
